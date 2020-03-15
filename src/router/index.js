@@ -1,27 +1,23 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
-const Layout = () => import('@/views/layout')
-const home = () => import('@/views/home')
-const question = () => import('@/views/question')
-const video = () => import('@/views/video')
 
 const routes = [
   {
     path: '/',
-    component: Layout,
+    component: () => import('@/views/layout'),
     children: [
       {
         // 默认为二级路由的默认组件
         path: '',
-        component: home
+        component: () => import('@/views/home')
       },
       {
         path: '/question',
-        component: question // 问答组件
+        component: () => import('@/views/question') // 问答组件
       }, {
         path: '/video',
-        component: video // 视频组件
+        component: () => import('@/views/video') // 视频组件
       }, {
         path: '/user',
         component: () => import('@/views/user') // 用户
