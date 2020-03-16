@@ -1,6 +1,6 @@
 /***
  * auth.js 专门处理token读写
- * create by zyt 2020/2/11
+ * create by zyt 2019/10/11
  *
  */
 
