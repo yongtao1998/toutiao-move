@@ -15,6 +15,8 @@ import router from '@/router'
         如果有 跳到需要跳转的页面
     router.currentRoute 表示当前的路由信息对象 里面包含了路由的地址 和参数
     需要获取 当前路由的带参数的地址  router.currentRoute.fullPath()
+    跳转到登录页面，需要携带当前访问路由地址
+    当你登录成功后，需要根据地址 回跳。
  *
  *
  */
@@ -61,6 +63,7 @@ instance.interceptors.response.use(function (response) {
   */
   //  401 就认为token失效
   if (error.response && error.response.status === 401) {
+    // 跳转地址
     const path = {
       path: '/login',
       query: {
