@@ -18,6 +18,10 @@ import router from '@/router'
     跳转到登录页面，需要携带当前访问路由地址
     当你登录成功后，需要根据地址 回跳。
  *
+ vue
+
+  $route
+  $router
  *
  */
 
@@ -62,6 +66,7 @@ instance.interceptors.response.use(function (response) {
   *     response 响应对象 status
   */
   //  401 就认为token失效
+  // console.log(error.config)
   if (error.response && error.response.status === 401) {
     // 跳转地址
     const path = {
@@ -90,7 +95,7 @@ instance.interceptors.response.use(function (response) {
           refresh_token: store.state.user.refresh_token // refresh_token 返回给原来的 state
         })
 
-        // 相当于执行之前出现401 错误的请求
+        // 相当于 执行之前出现401错误的请求
         return instance(error.config)
       } catch (error) {
         // 失败 意味着 尝试 获取新的token 但是没有获取到
