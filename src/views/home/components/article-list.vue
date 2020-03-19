@@ -4,7 +4,7 @@
   <!-- 预留 阅读记忆 -->
   <div class="scroll-wrapper">
     <!-- 下拉加载 -->
-    <!-- <van-pull-refresh v-model="downLoading" @refresh="onRefresh" :success-text="successText"></van-pull-refresh> -->
+    <van-pull-refresh v-model="downLoading" @refresh="onRefresh" :success-text="successText">
     <!-- 上拉刷新 -->
     <!-- loading 和 finished 两个变量控制加载状态 -->
     <!-- 当组件 滚动到底部 会触发 load事件 把loading 修改为 true 此时会触发异步操作并更新数据
@@ -42,6 +42,7 @@
         </van-cell>
       </van-cell-group>
     </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -68,7 +69,7 @@ export default {
     }
   },
   methods: {
-    // 异步操作 获取数据 并更新
+    // 获取上滑加载数据 并更新
     async onLoad () {
       const result = await getArticles({ channel_id: this.channel_id, timestamp: this.timestamp || Date.now() })
       // 把获取到的文章 添加到 文章列表后面
@@ -76,11 +77,35 @@ export default {
       // 关闭 上拉刷新
       this.loading = false
       // 把时间戳赋值给 timestamp 但是需要根据时间戳来 判断 是否还有没有数据
+      // pre_timestamp 为 0的时候 表示已经没有数据了
       if (result.pre_timestamp) {
         this.timestamp = result.pre_timestamp
       } else {
         // 表示没有数据了
         this.finished = true
+      }
+    },
+    // 下拉获取最近数据
+    async onRefresh () {
+      const data = await getArticles({
+        channel_id: this.channel_id, timestamp: Date.now() // 需要传入 最新的时间戳
+      })
+      this.downLoading = false // 关闭下拉状态
+      // 判断 是否有最新数据
+      if (data.results.length) {
+        // 将历史数据全部替换为最新数据
+        this.articles = data.results
+        this.successText = `更新了${data.results.length}条数据`
+        // 此时为最新数据 如果 之前把数据拉到了最底端 也就意味着 之前的finished已经为true
+        // 判断 传回来的时间戳是否 为 0
+        if (data.pre_timestamp) {
+          // 不为false 就将 finished 修改为 可以获取数据的状态
+          this.finished = false
+          // 把获取到的 时间戳 再存到 实例中
+          this.timestamp = data.pre_timestamp
+        }
+      } else {
+        this.successText = '当前已经是最新数据了'
       }
     }
   }
