@@ -8,5 +8,13 @@ export default {
     // 给Vue的原型属性赋值一个函数 自定义一个函数名
     // 执行 这个代码的时候 Vue.prototype.$notify 应该已经挂载
     Vue.prototype.$gnotify = (params) => Vue.prototype.$notify({ duration: 800, ...params })
+    Vue.prototype.$sleep = sleep
   }
+}
+
+// 休眠函数
+function sleep (time = 500) { // 休眠时间
+  return new Promise(function (resolve, reject) {
+    setTimeout(() => resolve(), time)
+  })
 }

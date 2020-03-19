@@ -6,7 +6,7 @@ import router from '@/router'
 import store from '@/store'
 
 router.beforeEach(function (to, from, next) {
-  console.log(to)
+  // console.log(to)
   // 判断请求地址和token
   if (to.path.startsWith('/user') && !store.state.user.token) {
     next({

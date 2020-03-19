@@ -71,6 +71,7 @@ export default {
   methods: {
     // 获取上滑加载数据 并更新
     async onLoad () {
+      await this.$sleep()
       const result = await getArticles({ channel_id: this.channel_id, timestamp: this.timestamp || Date.now() })
       // 把获取到的文章 添加到 文章列表后面
       this.articles.push(...result.results)
@@ -87,6 +88,7 @@ export default {
     },
     // 下拉获取最近数据
     async onRefresh () {
+      await this.$sleep()
       const data = await getArticles({
         channel_id: this.channel_id, timestamp: Date.now() // 需要传入 最新的时间戳
       })
