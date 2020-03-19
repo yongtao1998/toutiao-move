@@ -4,9 +4,9 @@
 <!-- 放置 tabs组件 -->
 <van-tabs>
   <!-- title值为当前显示的标签页 -->
-  <van-tab :title="`标签${item}`" v-for="item in 10" :key="item">
+  <van-tab :title="item.name"  v-for="item in channels" :key="item.id">
     <!-- 文章列表  -->
-    <ArticleList></ArticleList>>
+    <ArticleList :channel_id="item.id"></ArticleList>
   </van-tab>
 </van-tabs>
 
@@ -20,9 +20,25 @@
 
 <script>
 import ArticleList from './components/article-list'
+import { getMyChannels } from '@/api/channels'
 export default {
   components: {
     ArticleList
+  },
+  data () {
+    return {
+      channels: []
+    }
+  },
+  methods: {
+    // 获取频道列表
+    async  getMyChannels () {
+      const result = await getMyChannels()
+      this.channels = result.channels
+    }
+  },
+  created () {
+    this.getMyChannels()
   }
 }
 </script>
