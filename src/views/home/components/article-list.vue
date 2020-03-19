@@ -46,7 +46,17 @@
 </template>
 
 <script>
+// 获取文章
+import { getArticles } from '@/api/articles'
 export default {
+  // 对象形式可以约束传入的值 必填 传值类型
+  props: {
+    channel_id: {
+      required: true,
+      type: Number,
+      default: null
+    }
+  },
   data () {
     return {
       downLoading: false, // 下拉刷新状态
@@ -59,10 +69,63 @@ export default {
   },
   methods: {
     // 异步操作 获取数据 并更新
-    onLoad () {}
+    async onLoad () {
+      const result = await getArticles({ channel_id: this.channel_id, timestamp: this.timestamp || Date.now() })
+      // 把获取到的文章 添加到 文章列表后面
+      this.articles.push(...result.results)
+      // 关闭 上拉刷新
+      this.loading = false
+      // 把时间戳赋值给 timestamp 但是需要根据时间戳来 判断 是否还有没有数据
+      if (result.pre_timestamp) {
+        this.timestamp = result.pre_timestamp
+      } else {
+        // 表示没有数据了
+        this.finished = true
+      }
+    }
   }
 }
 </script>
 
-<style>
+<style lang='less' scoped>
+.article_item {
+  h3 {
+    font-weight: normal;
+    line-height: 2;
+  }
+  .img_box {
+    display: flex;
+    justify-content: space-between;
+    .w33 {
+      width: 33%;
+      height: 90px;
+    }
+    .w100 {
+      width: 100%;
+      height: 180px;
+    }
+  }
+  .info_box {
+    color: #999;
+    line-height: 2;
+    position: relative;
+    font-size: 12px;
+    span {
+      padding-right: 10px;
+      &.close {
+        border: 1px solid #ddd;
+        border-radius: 2px;
+        line-height: 15px;
+        height: 12px;
+        width: 16px;
+        text-align: center;
+        padding-right: 0;
+        font-size: 8px;
+        position: absolute;
+        right: 0;
+        top: 7px;
+      }
+    }
+  }
+}
 </style>
