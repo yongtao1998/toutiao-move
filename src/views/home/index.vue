@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 放置 tabs组件 -->
-    <van-tabs>
+    <van-tabs v-model="activeIndex">
       <!-- title值为当前显示的标签页 -->
       <van-tab :title="item.name" v-for="item in channels" :key="item.id">
         <!-- 文章列表  -->
@@ -12,13 +12,13 @@
     <!-- tabs下 放置 图标 编辑 频道的图标 -->
     <span class="bar_btn">
       <!-- vant图标 -->
-      <van-icon name="wap-nav" />
+      <van-icon name='wap-nav'></van-icon>
     </span>
 
     <!-- 弹层组件 -->
     <van-popup v-model="showMoreAction" style="width:80%">
       <!-- 放置反馈的组件 -->
-      <MoreAction></MoreAction>
+      <MoreAction @dislike="dislikeArticle"/>
     </van-popup>
   </div>
 </template>
@@ -27,6 +27,10 @@
 import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
 import { getMyChannels } from '@/api/channels'
+import { dislike } from '@/api/articles'
+
+import eventBus from '@/utils/eventBus'
+
 export default {
   components: {
     ArticleList,
@@ -34,19 +38,44 @@ export default {
   },
   data () {
     return {
-      channels: [],
-      showMoreAction: false
+      channels: [], // 频道数据
+      showMoreAction: false, // 控制遮罩层显示
+      articleId: null, // 不感兴趣文章 id
+      activeIndex: 0 // 当前默认激活的页面0
     }
   },
   methods: {
-    // 控制遮罩层显示
-    openAction () {
-      this.showMoreAction = true
-    },
     // 获取频道列表
     async getMyChannels () {
       const result = await getMyChannels()
       this.channels = result.channels
+    },
+    // 控制遮罩层显示
+    // 把当前不感兴趣的文章id存储到组件中
+    openAction (artId) {
+      this.showMoreAction = true
+      this.articleId = artId
+    },
+    async dislikeArticle () {
+      try {
+        await dislike({
+          target: this.articleId
+        })
+        this.$notify({
+          type: 'success',
+          message: '操作成功'
+        })
+        // 触发一个事件 利用事件广播机制 通知对应的tab 来删除 文章数据
+        // 还应该传入 当前频道
+        // this.channels[this.activeIndex].id // 当前激活的频道数据
+        eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
+        // 关闭弹出层
+        this.showMoreAction = false
+      } catch (error) {
+        this.$notify({
+          message: '操作失败'
+        })
+      }
     }
   },
   created () {

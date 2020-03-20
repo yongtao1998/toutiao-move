@@ -32,7 +32,9 @@ const instance = axios.create({
 
   //   大数字处理
   //   数据响应回来 还没进入 axios的响应拦截器时执行
-  transfromResponse: [function (data) {
+  transformResponse: [function (data) {
+    //   data就是后端响应回来的字符串
+    // JSON.parse()
     return data ? JSONBig.parse(data) : {}
   }]
 })

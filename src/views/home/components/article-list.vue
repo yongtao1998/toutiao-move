@@ -5,13 +5,13 @@
   <div class="scroll-wrapper">
     <!-- 下拉加载 -->
     <van-pull-refresh v-model="downLoading" @refresh="onRefresh" :success-text="successText">
+
     <!-- 上拉刷新 -->
     <!-- loading 和 finished 两个变量控制加载状态 -->
     <!-- 当组件 滚动到底部 会触发 load事件 把loading 修改为 true 此时会触发异步操作并更新数据
             数据更新完 将loading设置为 false 就可以
             注意：van-list 初始化完毕 就会检测距离底部的长度，如果超过30px 就会将 loading 修改为 true
     -->
-
     <van-list v-model="loading" :finished="finished" @load="onLoad" finished-text="没有更多了">
       <!-- 循环内容 -->
       <van-cell-group>
@@ -35,7 +35,7 @@
               <span>{{ item.aut_name }}</span>
               <span>{{ item.comm_count }}评论</span>
               <span>{{ item.pubdate | relTime}}</span>
-              <span class="close" @click="$emit('showAction',item.art_id.toString())" v-if="$store.state.user.token">
+               <span @click="$emit('showAction', item.art_id.toString())" class="close" v-if="$store.state.user.token">
                 <van-icon name="cross"></van-icon>
               </span>
             </div>
@@ -50,6 +50,7 @@
 <script>
 // 获取文章
 import { getArticles } from '@/api/articles'
+import eventBus from '@/utils/eventBus'
 export default {
   // 对象形式可以约束传入的值 必填 传值类型
   props: {
@@ -111,6 +112,24 @@ export default {
         this.successText = '当前已经是最新数据了'
       }
     }
+  },
+  created () {
+    // 监听删除文章事件
+    eventBus.$on('delArticle', (artId, channelId) => {
+      // 判断 传过来的频道 是否等于 自身的频道
+      if (channelId === this.channel_id) {
+        // 通过 id查询文章所在的下标
+        const index = this.articles.findIndex(item => item.art_id.toString() === artId)
+        if (index > -1) {
+          // 下标 从0 开始 所以要大于-1 删除对应下标数据
+          this.articles.splice(index, 1)
+        }
+        // 当内容 删除为0 的时候 需要手动开启 onload
+        if (this.articles.length === 0) {
+          this.onLoad()
+        }
+      }
+    })
   }
 }
 </script>
