@@ -11,7 +11,7 @@
       <!-- 单元格组2 -->
       <van-cell-group v-else>
           <van-cell icon="arrow-left" @click="isReport=false">返回</van-cell>
-          <van-cell v-for="item in reports" :key="item.value">{{item.label}}</van-cell>
+          <van-cell @click="$emit('report',item.value)" v-for="item in reports" :key="item.value">{{item.label}}</van-cell>
 
       </van-cell-group>
   </div>

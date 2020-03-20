@@ -18,7 +18,8 @@
     <!-- 弹层组件 -->
     <van-popup v-model="showMoreAction" style="width:80%">
       <!-- 放置反馈的组件 -->
-      <MoreAction @dislike="dislikeArticle"/>
+      <!-- 自定义事件中 $event 就是自定义事件传出来的参数 -->
+      <MoreAction @dislike="dislikeOrReport('dislike')" @report="dislikeOrReport('report',$event)" />
     </van-popup>
   </div>
 </template>
@@ -27,7 +28,7 @@
 import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
 import { getMyChannels } from '@/api/channels'
-import { dislike } from '@/api/articles'
+import { dislike, report } from '@/api/articles'
 
 import eventBus from '@/utils/eventBus'
 
@@ -45,22 +46,28 @@ export default {
     }
   },
   methods: {
+
     // 获取频道列表
     async getMyChannels () {
       const result = await getMyChannels()
       this.channels = result.channels
     },
+
     // 控制遮罩层显示
     // 把当前不感兴趣的文章id存储到组件中
     openAction (artId) {
       this.showMoreAction = true
       this.articleId = artId
     },
-    async dislikeArticle () {
+
+    // 不感兴趣和举报文章
+    // openAction 是 事件类型  type 举报类型
+    async dislikeOrReport (operateType, type) {
       try {
-        await dislike({
-          target: this.articleId
-        })
+        operateType === dislike ? await dislike({
+          target: this.articleId // 不感兴趣
+        }) : await report({ target: this.articleId, type }) // 举报文章
+
         this.$notify({
           type: 'success',
           message: '操作成功'

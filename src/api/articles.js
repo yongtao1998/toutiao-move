@@ -14,10 +14,23 @@ export function getArticles (params) {
   })
 }
 
+/****
+ * 不感兴趣 接口
+ */
 export function dislike (data) {
   return $http({
     url: '/article/dislikes',
     method: 'post',
     data
+  })
+}
+/***
+ * 举报接口
+ */
+export function report (data) {
+  return $http({
+    url: '/article/reports',
+    data,
+    method: 'post'
   })
 }
