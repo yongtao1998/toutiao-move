@@ -1,38 +1,50 @@
 <template>
+  <div class="container">
+    <!-- 放置 tabs组件 -->
+    <van-tabs>
+      <!-- title值为当前显示的标签页 -->
+      <van-tab :title="item.name" v-for="item in channels" :key="item.id">
+        <!-- 文章列表  -->
+        <ArticleList :channel_id="item.id" @showAction="openAction"></ArticleList>
+      </van-tab>
+    </van-tabs>
 
-<div class="container">
-<!-- 放置 tabs组件 -->
-<van-tabs>
-  <!-- title值为当前显示的标签页 -->
-  <van-tab :title="item.name"  v-for="item in channels" :key="item.id">
-    <!-- 文章列表  -->
-    <ArticleList :channel_id="item.id"></ArticleList>
-  </van-tab>
-</van-tabs>
+    <!-- tabs下 放置 图标 编辑 频道的图标 -->
+    <span class="bar_btn">
+      <!-- vant图标 -->
+      <van-icon name="wap-nav" />
+    </span>
 
-<!-- tabs下 放置 图标 编辑 频道的图标 -->
-<span class="bar_btn">
-  <!-- vant图标 -->
-  <van-icon name="wap-nav" />
-</span>
-</div>
+    <!-- 弹层组件 -->
+    <van-popup v-model="showMoreAction" style="width:80%">
+      <!-- 放置反馈的组件 -->
+      <MoreAction></MoreAction>
+    </van-popup>
+  </div>
 </template>
 
 <script>
 import ArticleList from './components/article-list'
+import MoreAction from './components/more-action'
 import { getMyChannels } from '@/api/channels'
 export default {
   components: {
-    ArticleList
+    ArticleList,
+    MoreAction
   },
   data () {
     return {
-      channels: []
+      channels: [],
+      showMoreAction: false
     }
   },
   methods: {
+    // 控制遮罩层显示
+    openAction () {
+      this.showMoreAction = true
+    },
     // 获取频道列表
-    async  getMyChannels () {
+    async getMyChannels () {
       const result = await getMyChannels()
       this.channels = result.channels
     }
@@ -59,13 +71,13 @@ export default {
       height: 2px;
     }
   }
-  /deep/ .van-tabs__content{
+  /deep/ .van-tabs__content {
     flex: 1;
     overflow: hidden;
   }
-  /deep/ .van-tab__pane{
+  /deep/ .van-tab__pane {
     height: 100%;
-    .scroll-wrapper{
+    .scroll-wrapper {
       height: 100%;
       overflow-y: auto;
     }
