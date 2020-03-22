@@ -62,3 +62,17 @@ export function delChannel (id) {
     }
   })
 }
+
+/***
+ * 添加频道
+ * channel 是一个对象
+ */
+export function addChannel (channel) {
+  return new Promise(function (resolve, reject) {
+    const key = store.state.user.token ? CHANNEL_V : CHANNEL_Y
+    const channels = JSON.parse(localStorage.getItem(key))
+    channels.push(channel) // 将频道添加到队尾
+    localStorage.setItem(key, JSON.stringify(channels))
+    resolve()
+  })
+}

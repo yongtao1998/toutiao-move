@@ -24,7 +24,7 @@
 
     <!-- 频道编辑组件 放在 弹出面板的组件 -->
     <van-action-sheet :round="false" title="编辑频道" v-model="showChannelEdit">
-      <ChannelEdit @delChannel="delChannel" :channels='channels' :activeIndex="activeIndex" @selectChannel="selectChannel"></ChannelEdit>
+      <ChannelEdit @delChannel="delChannel" @addChannel="addChannel" :channels='channels' :activeIndex="activeIndex" @selectChannel="selectChannel"></ChannelEdit>
     </van-action-sheet>
   </div>
 </template>
@@ -33,7 +33,7 @@
 import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
 import ChannelEdit from './components/channel_edit'
-import { getMyChannels, delChannel } from '@/api/channels'
+import { getMyChannels, delChannel, addChannel } from '@/api/channels'
 import { dislike, report } from '@/api/articles'
 
 import eventBus from '@/utils/eventBus'
@@ -72,7 +72,11 @@ export default {
         this.$notify({ message: '删除频道失败' })
       }
     },
-
+    // 添加频道
+    async addChannel (channel) {
+      await addChannel(channel)
+      this.channels.push(channel)
+    },
     // 频道切换 关闭弹层
     selectChannel (index) {
       this.activeIndex = index
