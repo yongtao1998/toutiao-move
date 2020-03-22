@@ -76,7 +76,7 @@ instance.interceptors.response.use(function (response) {
       query: {
         //   需要传递的参数
         // router.currentRouter 当前路由 对应的路由信息对象
-        redirectUrl: router.currentRouter.fullPath // 表示登录页需要跳转的地址
+        redirectUrl: router.currentRoute.fullPath // 表示登录页需要跳转的地址
       }
     }
 

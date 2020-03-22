@@ -9,7 +9,8 @@
       </div>
       <van-grid class="van-hairline--left">
         <van-grid-item v-for="(channel,index) in channels" :key="channel.id">
-          <span @click="$emit('selectChannel',index)" class="f12">{{channel.name}}</span>
+            <!-- 传出当前点击的下标   根据传过来的下标激活 特定样式 -->
+          <span @click="$emit('selectChannel',index)" :class="{red:index===activeIndex}" class="f12">{{channel.name}}</span>
           <!-- 默认 第一个不可修改 -->
           <van-icon v-if="index&&editing" class="btn" name="cross"></van-icon>
         </van-grid-item>
@@ -32,10 +33,17 @@
 import { getAllChannels } from '@/api/channels'
 export default {
   props: {
+    //   传入频道列表
     channels: {
       required: true,
       type: Array,
       default: () => []
+    },
+    // 传入 当前点击频道
+    activeIndex: {
+      required: true,
+      type: Number,
+      default: 0
     }
   },
   data () {
