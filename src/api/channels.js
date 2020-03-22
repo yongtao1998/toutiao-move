@@ -55,7 +55,7 @@ export function delChannel (id) {
     if (index > -1) {
       channels.splice(index, 1)
       // 从新写入缓存
-      localStorage.setItem(key, JSON.parse(channels))
+      localStorage.setItem(key, JSON.stringify(channels))
       resolve()
     } else {
       reject(new Error('没有找到对应的频道'))

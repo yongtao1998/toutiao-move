@@ -24,7 +24,7 @@
 
     <!-- 频道编辑组件 放在 弹出面板的组件 -->
     <van-action-sheet :round="false" title="编辑频道" v-model="showChannelEdit">
-      <ChannelEdit :channels='channels' :activeIndex="activeIndex" @selectChannel="selectChannel"></ChannelEdit>
+      <ChannelEdit @delChannel="delChannel" :channels='channels' :activeIndex="activeIndex" @selectChannel="selectChannel"></ChannelEdit>
     </van-action-sheet>
   </div>
 </template>
@@ -33,7 +33,7 @@
 import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
 import ChannelEdit from './components/channel_edit'
-import { getMyChannels } from '@/api/channels'
+import { getMyChannels, delChannel } from '@/api/channels'
 import { dislike, report } from '@/api/articles'
 
 import eventBus from '@/utils/eventBus'
@@ -54,6 +54,25 @@ export default {
     }
   },
   methods: {
+    // 删除频道
+    async delChannel (id) {
+      // 删除缓存中的数据
+      try {
+        await delChannel(id)
+        // 移除当前data中的数据
+        const index = this.channels.findIndex(item => item.id === id)
+        // 根据要删除的索引和激活当前索引的关系 来决定 当前索引是否需要更改
+        if (index <= this.activeIndex - 1) {
+          // 如果删除的索引 是在当前激活索引之前的 或者等于当前激活索引的
+          // 此时就要把激活索引 给往前挪一位
+          this.activeIndex = this.activeIndex - 1
+        }
+        this.channels.splice(index, 1)
+      } catch (error) {
+        this.$notify({ message: '删除频道失败' })
+      }
+    },
+
     // 频道切换 关闭弹层
     selectChannel (index) {
       this.activeIndex = index

@@ -12,7 +12,7 @@
             <!-- 传出当前点击的下标   根据传过来的下标激活 特定样式 -->
           <span @click="$emit('selectChannel',index)" :class="{red:index===activeIndex}" class="f12">{{channel.name}}</span>
           <!-- 默认 第一个不可修改 -->
-          <van-icon v-if="index&&editing" class="btn" name="cross"></van-icon>
+          <van-icon v-if="index&&editing"  @click="$emit('delChannel',channel.id)" class="btn" name="cross"></van-icon>
         </van-grid-item>
       </van-grid>
     </div>
