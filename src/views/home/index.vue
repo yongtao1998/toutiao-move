@@ -24,7 +24,7 @@
 
     <!-- 频道编辑组件 放在 弹出面板的组件 -->
     <van-action-sheet :round="false" title="编辑频道" v-model="showChannelEdit">
-      <ChannelEdit :channels='channels'></ChannelEdit>
+      <ChannelEdit :channels='channels' @selectChannel="selectChannel"></ChannelEdit>
     </van-action-sheet>
   </div>
 </template>
@@ -54,6 +54,11 @@ export default {
     }
   },
   methods: {
+    // 频道切换 关闭弹层
+    selectChannel (index) {
+      this.activeIndex = index
+      this.showChannelEdit = false
+    },
     // 获取频道列表
     async getMyChannels () {
       const result = await getMyChannels()
