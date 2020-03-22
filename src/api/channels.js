@@ -38,3 +38,27 @@ export function getAllChannels () {
     url: '/channels'
   })
 }
+
+/****
+ * 删除频道 api
+ * id作为删除频道的依据
+ */
+
+export function delChannel (id) {
+  return new Promise(function (resolve, reject) {
+    // 有id 就可以直接从缓存中删除对应id的数据
+    const key = store.state.user.token ? CHANNEL_V : CHANNEL_Y
+    const channels = JSON.parse(localStorage.getItem(key))
+    // 找到对应频道的索引
+    const index = channels.findIndex(item => item.id === id)
+    // 如果查找到了对应下标 就删除元素
+    if (index > -1) {
+      channels.splice(index, 1)
+      // 从新写入缓存
+      localStorage.setItem(key, JSON.parse(channels))
+      resolve()
+    } else {
+      reject(new Error('没有找到对应的频道'))
+    }
+  })
+}
