@@ -28,7 +28,7 @@ export default {
     }
   },
   created () {
-    eventBus.$on('delArticle', () => (this.isReport = false)) // 只要你一开始删除 我就把弹层中反馈组件重置为初始状态
+    eventBus.$on('delArticle', () => (this.isReport = false)) // 只要一开始删除 我就把弹层中反馈组件重置为初始状态
   }
 }
 </script>

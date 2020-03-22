@@ -10,9 +10,9 @@
     </van-tabs>
 
     <!-- tabs下 放置 图标 编辑 频道的图标 -->
-    <span class="bar_btn">
+    <span class="bar_btn" @click="showChannelEdit=true">
       <!-- vant图标 -->
-      <van-icon name='wap-nav'></van-icon>
+      <van-icon name="wap-nav"></van-icon>
     </span>
 
     <!-- 弹层组件 -->
@@ -21,12 +21,18 @@
       <!-- 自定义事件中 $event 就是自定义事件传出来的参数 -->
       <MoreAction @dislike="dislikeOrReport('dislike')" @report="dislikeOrReport('report',$event)" />
     </van-popup>
+
+    <!-- 频道编辑组件 放在 弹出面板的组件 -->
+    <van-action-sheet :round="false" title="编辑频道" v-model="showChannelEdit">
+      <ChannelEdit :channels='channels'></ChannelEdit>
+    </van-action-sheet>
   </div>
 </template>
 
 <script>
 import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
+import ChannelEdit from './components/channel_edit'
 import { getMyChannels } from '@/api/channels'
 import { dislike, report } from '@/api/articles'
 
@@ -35,18 +41,19 @@ import eventBus from '@/utils/eventBus'
 export default {
   components: {
     ArticleList,
-    MoreAction
+    MoreAction,
+    ChannelEdit
   },
   data () {
     return {
       channels: [], // 频道数据
       showMoreAction: false, // 控制遮罩层显示
       articleId: null, // 不感兴趣文章 id
-      activeIndex: 0 // 当前默认激活的页面0
+      activeIndex: 0, // 当前默认激活的页面0
+      showChannelEdit: false
     }
   },
   methods: {
-
     // 获取频道列表
     async getMyChannels () {
       const result = await getMyChannels()
@@ -64,9 +71,11 @@ export default {
     // openAction 是 事件类型  type 举报类型
     async dislikeOrReport (operateType, type) {
       try {
-        operateType === dislike ? await dislike({
-          target: this.articleId // 不感兴趣
-        }) : await report({ target: this.articleId, type }) // 举报文章
+        operateType === dislike
+          ? await dislike({
+            target: this.articleId // 不感兴趣
+          })
+          : await report({ target: this.articleId, type }) // 举报文章
 
         this.$notify({
           type: 'success',
@@ -75,7 +84,11 @@ export default {
         // 触发一个事件 利用事件广播机制 通知对应的tab 来删除 文章数据
         // 还应该传入 当前频道
         // this.channels[this.activeIndex].id // 当前激活的频道数据
-        eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
+        eventBus.$emit(
+          'delArticle',
+          this.articleId,
+          this.channels[this.activeIndex].id
+        )
         // 关闭弹出层
         this.showMoreAction = false
       } catch (error) {
@@ -144,6 +157,17 @@ export default {
     z-index: 1000;
     &::before {
       font-size: 20px;
+    }
+  }
+}
+.van-action-sheet {
+  max-height: 100%;
+  height: 100%;
+  .van-action-sheet__header {
+    background: #3296fa;
+    color: #fff;
+    .van-icon-close {
+      color: #fff;
     }
   }
 }
