@@ -9,15 +9,16 @@
         <span>j</span>
       </van-cell>
     </van-cell-group>
-    <div class="history-box" v-else>
+    <!-- 有历史记录的时候才显示 -->
+    <div class="history-box" v-else-if="historyList.length">
       <div class="head">
         <span>历史记录</span>
         <van-icon name="delete"></van-icon>
       </div>
       <van-cell-group>
-        <van-cell>
-          <a class="word_btn">电脑</a>
-          <van-icon class="close_btn" slot="right-icon" name="cross" />
+        <van-cell v-for="(item,index) in historyList" :key="index">
+          <a class="word_btn">{{item}}</a>
+          <van-icon @click="delHistory(index)" class="close_btn" slot="right-icon" name="cross" />
         </van-cell>
       </van-cell-group>
     </div>
@@ -25,11 +26,24 @@
 </template>
 
 <script>
+const key = 'toutiao-history'
 export default {
   name: 'search',
   data () {
     return {
-      q: ''
+      q: '', // 输入数据
+      historyList: [] // 历史记录数据
+    }
+  },
+  created () {
+    // 读取历史记录
+    this.historyList = JSON.parse(localStorage.getItem(key) || '[]')
+  },
+  methods: {
+    // 删除历史记录
+    delHistory (index) {
+      this.historyList.splice(index, 1)
+      localStorage.setItem(key, JSON.stringify(this.historyList))
     }
   }
 }
