@@ -17,7 +17,7 @@
       </div>
       <van-cell-group>
         <van-cell v-for="(item,index) in historyList" :key="index">
-          <a class="word_btn">{{item}}</a>
+          <a @click="toResult(item)" class="word_btn">{{item}}</a>
           <van-icon @click="delHistory(index)" class="close_btn" slot="right-icon" name="cross" />
         </van-cell>
       </van-cell-group>
@@ -44,6 +44,10 @@ export default {
     delHistory (index) {
       this.historyList.splice(index, 1)
       localStorage.setItem(key, JSON.stringify(this.historyList))
+    },
+    // 根据历史记录跳转到搜索结果页
+    toResult (item) {
+      this.$router.push({ path: '/search/result', query: { q: item } })
     }
   }
 }
