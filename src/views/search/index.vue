@@ -47,6 +47,7 @@ export default {
       this.historyList.splice(index, 1)
       localStorage.setItem(key, JSON.stringify(this.historyList))
     },
+
     // 根据历史记录跳转到搜索结果页
     // 搜索选项加入搜索历史 并跳到搜索结果
     toResult (item) {
@@ -58,12 +59,11 @@ export default {
       this.$router.push({ path: '/search/result', query: { q: item } })
     },
     // 清除历史记录
-
     clear () {
       this.historyList = []
       localStorage.setItem(key, '[]')
     },
-    // 搜索内容
+    // 搜索内容跳转
     onSearch () {
       // 如果 输入内容为空 直接 return
       if (!this.q) return

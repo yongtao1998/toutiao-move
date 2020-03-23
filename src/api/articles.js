@@ -44,3 +44,14 @@ export function getSuggestion (params) {
     params
   })
 }
+
+/****
+ * 搜索结果 上拉加载
+ */
+
+export function searchArticle (params) {
+  return $http({
+    url: '/search',
+    params
+  })
+}
