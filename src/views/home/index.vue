@@ -99,7 +99,7 @@ export default {
     // openAction 是 事件类型  type 举报类型
     async dislikeOrReport (operateType, type) {
       try {
-        operateType === dislike
+        operateType === 'dislike'
           ? await dislike({
             target: this.articleId // 不感兴趣
           })
