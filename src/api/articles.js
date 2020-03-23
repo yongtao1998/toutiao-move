@@ -34,3 +34,13 @@ export function report (data) {
     method: 'post'
   })
 }
+
+/****
+ * 获取联想搜索
+ */
+export function getSuggestion (params) {
+  return $http({
+    url: '/suggestion',
+    params
+  })
+}
