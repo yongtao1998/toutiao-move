@@ -3,7 +3,7 @@
     <!-- 搜索组件一级路由   返回上一个页面-->
     <van-nav-bar left-arrow title="搜索中心" @click-left="$router.back()"></van-nav-bar>
     <!-- 导航 -->
-    <van-search v-model.trim="q" placeholder="请输入搜索关键词" shape="round" />
+    <van-search @search='onSearch' v-model.trim="q" placeholder="请输入搜索关键词" shape="round" />
     <van-cell-group class="suggest-box" v-if="q">
       <van-cell icon="search">
         <span>j</span>
@@ -13,7 +13,7 @@
     <div class="history-box" v-else-if="historyList.length">
       <div class="head">
         <span>历史记录</span>
-        <van-icon name="delete"></van-icon>
+        <van-icon name="delete" @click="clear"></van-icon>
       </div>
       <van-cell-group>
         <van-cell v-for="(item,index) in historyList" :key="index">
@@ -48,6 +48,22 @@ export default {
     // 根据历史记录跳转到搜索结果页
     toResult (item) {
       this.$router.push({ path: '/search/result', query: { q: item } })
+    },
+    // 清除历史记录
+    clear () {
+      this.historyList = []
+      localStorage.setItem(key, '[]')
+    },
+    // 搜索内容
+    onSearch () {
+      // 如果 输入内容为空 直接 return
+      if (!this.q) return
+      // 搜索结果 添加到历史记录中
+      this.historyList.push(this.q)
+      this.historyList = Array.from(new Set(this.historyList)) // 去重
+      localStorage.setItem(key, JSON.stringify(this.historyList))
+      // 跳转到 搜索结果页 并且携带参数
+      this.$router.push({ path: '/search/result', query: { q: this.q } })
     }
   }
 }
