@@ -9,7 +9,7 @@
           <p class="name">{{article.aut_name}}</p>
           <p class="time">{{article.pubdate}}</p>
         </div>
-        <van-button round size="small" type="info">{{article.is_followed?'已关注':'+ 关注'}}</van-button>
+        <van-button @click="follow" round size="small" type="info">{{article.is_followed?'已关注':'+ 关注'}}</van-button>
       </div>
       <div class="content" v-html="article.content">
 
@@ -25,6 +25,7 @@
 
 <script>
 import { getArticleInfo } from '@/api/articles'
+import * as user from '@/api/user'
 export default {
   data () {
     return {
@@ -36,6 +37,20 @@ export default {
     async getArticleInfo () {
       const { artId } = this.$route.query
       this.article = await getArticleInfo(artId)
+    },
+
+    // 关注获取取消关注
+    async follow () {
+      try {
+        if (this.article.is_followed) {
+          await user.unfollowUser(this.article.aut_id)
+        } else {
+          await user.followUser({ target: this.article.aut_id })
+        }
+        this.article.is_followed = !this.article.is_followed
+      } catch (error) {
+        this.$notify({ message: '操作失败' })
+      }
     }
   },
   created () {
