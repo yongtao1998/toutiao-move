@@ -6,7 +6,7 @@
           <!-- 不感兴趣接口 -->
           <van-cell @click="$emit('dislike')">不感兴趣</van-cell>
           <van-cell is-link  @click="isReport=true">反馈垃圾内容</van-cell>
-          <van-cell>拉黑作者</van-cell>
+          <van-cell @click="$emit('blacklist')">拉黑作者</van-cell>
       </van-cell-group>
       <!-- 单元格组2 -->
       <van-cell-group v-else>

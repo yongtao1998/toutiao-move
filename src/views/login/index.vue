@@ -41,7 +41,7 @@ export default {
         // mobile: '',
         mobile: '18454778830',
         // code: ''
-        code: '123456'
+        code: '246810'
       },
       errorMessage: {
         mobile: '',

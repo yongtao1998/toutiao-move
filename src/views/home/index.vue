@@ -19,7 +19,7 @@
     <van-popup v-model="showMoreAction" style="width:80%">
       <!-- 放置反馈的组件 -->
       <!-- 自定义事件中 $event 就是自定义事件传出来的参数 -->
-      <MoreAction @dislike="dislikeOrReport('dislike')" @report="dislikeOrReport('report',$event)" />
+      <MoreAction @blacklist="blacklist" @dislike="dislikeOrReport('dislike')" @report="dislikeOrReport('report',$event)" />
     </van-popup>
 
     <!-- 频道编辑组件 放在 弹出面板的组件 -->
@@ -34,7 +34,7 @@ import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
 import ChannelEdit from './components/channel_edit'
 import { getMyChannels, delChannel, addChannel } from '@/api/channels'
-import { dislike, report } from '@/api/articles'
+import { dislike, report, blacklist } from '@/api/articles'
 
 import eventBus from '@/utils/eventBus'
 
@@ -50,10 +50,27 @@ export default {
       showMoreAction: false, // 控制遮罩层显示
       articleId: null, // 不感兴趣文章 id
       activeIndex: 0, // 当前默认激活的页面0
-      showChannelEdit: false
+      showChannelEdit: false,
+      authodId: null // 用户id
     }
   },
   methods: {
+    // 拉黑作者 沙比东西 一直存脏数据
+    async blacklist () {
+      try {
+        await blacklist({
+          target: this.authodId
+        })
+        this.$notify({
+          type: 'success',
+          message: '操作成功'
+        })
+        this.showMoreAction = false
+        eventBus.$emit('blacklist', this.authodId)
+      } catch (error) {
+        this.$notify({ message: '失败' })
+      }
+    },
     // 删除频道
     async delChannel (id) {
       // 删除缓存中的数据
@@ -90,9 +107,10 @@ export default {
 
     // 控制遮罩层显示
     // 把当前不感兴趣的文章id存储到组件中
-    openAction (artId) {
+    openAction (artId, autId) {
       this.showMoreAction = true
       this.articleId = artId
+      this.authodId = autId
     },
 
     // 不感兴趣和举报文章

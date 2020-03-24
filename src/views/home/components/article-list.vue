@@ -35,7 +35,8 @@
               <span>{{ item.aut_name }}</span>
               <span>{{ item.comm_count }}评论</span>
               <span>{{ item.pubdate | relTime}}</span>
-               <span @click.stop="$emit('showAction', item.art_id.toString())" class="close" v-if="$store.state.user.token">
+              <!-- <span>{{ item.aut_id}}</span> -->
+               <span @click.stop="$emit('showAction', item.art_id.toString(),item.aut_id.toString())" class="close" v-if="$store.state.user.token">
                 <van-icon name="cross"></van-icon>
               </span>
             </div>
@@ -112,9 +113,10 @@ export default {
         this.successText = '当前已经是最新数据了'
       }
     }
+
   },
   created () {
-    // 监听删除文章事件
+    // // 监听删除文章事件
     eventBus.$on('delArticle', (artId, channelId) => {
       // 判断 传过来的频道 是否等于 自身的频道
       if (channelId === this.channel_id) {
@@ -128,6 +130,15 @@ export default {
         if (this.articles.length === 0) {
           this.onLoad()
         }
+      }
+    })
+    eventBus.$on('blacklist', (autId) => {
+      const i = this.articles.findIndex(item => item.aut_id.toString() === autId)
+      if (i > -1) {
+        this.articles.splice(i, 1)
+      }
+      if (this.articles.length === 0) {
+        this.onLoad()
       }
     })
   }

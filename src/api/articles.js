@@ -36,6 +36,17 @@ export function report (data) {
 }
 
 /****
+ * 拉黑作者
+ */
+
+export function blacklist (data) {
+  return $http({
+    url: '/user/blacklists',
+    method: 'post',
+    data
+  })
+}
+/****
  * 获取联想搜索
  */
 export function getSuggestion (params) {
