@@ -55,3 +55,12 @@ export function searchArticle (params) {
     params
   })
 }
+
+/***
+ * 获取文章数据
+ */
+export function getArticleInfo (artId) {
+  return $http({
+    url: `/articles/${artId}`
+  })
+}

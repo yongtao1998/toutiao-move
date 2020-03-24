@@ -15,7 +15,7 @@
     <van-list v-model="loading" :finished="finished" @load="onLoad" finished-text="没有更多了">
       <!-- 循环内容 -->
       <van-cell-group>
-        <van-cell v-for="item in articles" :key="item.art_id.toString()">
+        <van-cell :to="`/article?artId=${item.art_id.toString()}`" v-for="item in articles" :key="item.art_id.toString()">
           <div class="article_item">
             <!-- 标题 -->
             <h3 class="van-ellipsis">{{ item.title }}</h3>
@@ -35,7 +35,7 @@
               <span>{{ item.aut_name }}</span>
               <span>{{ item.comm_count }}评论</span>
               <span>{{ item.pubdate | relTime}}</span>
-               <span @click="$emit('showAction', item.art_id.toString())" class="close" v-if="$store.state.user.token">
+               <span @click.stop="$emit('showAction', item.art_id.toString())" class="close" v-if="$store.state.user.token">
                 <van-icon name="cross"></van-icon>
               </span>
             </div>

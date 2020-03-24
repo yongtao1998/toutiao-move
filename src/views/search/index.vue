@@ -18,7 +18,7 @@
       <van-cell-group>
         <van-cell v-for="(item,index) in historyList" :key="index">
           <a @click="toResult(item)" class="word_btn">{{item}}</a>
-          <van-icon @click="delHistory(index)" class="close_btn" slot="right-icon" name="cross" />
+          <van-icon @click.stop="delHistory(index)" class="close_btn" slot="right-icon" name="cross" />
         </van-cell>
       </van-cell-group>
     </div>

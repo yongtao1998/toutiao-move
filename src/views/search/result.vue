@@ -8,7 +8,7 @@
     <!-- 防止搜索结果列表 -->
     <van-list v-model="upLoading" @load="onLoad" :finished="finished">
       <van-cell-group>
-        <van-cell v-for="(item,index) in articles" :key="index">
+        <van-cell :to="`/article?artId=${item.art_id.toString()}`"  v-for="(item,index) in articles" :key="index">
           <div class="article_item">
             <h3 class="van-ellipsis">{{item.title}}</h3>
             <div class="img_box" v-if="item.cover.type===3">
