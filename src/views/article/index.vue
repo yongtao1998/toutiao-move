@@ -19,14 +19,20 @@
         &nbsp;&nbsp;&nbsp;&nbsp;
         <van-button round size="small" :class="{active:article.attitude===0}" plain icon="delete">不喜欢</van-button>
       </div>
+       <Comment/>
     </div>
+
   </div>
 </template>
 
 <script>
 import { getArticleInfo } from '@/api/articles'
 import * as user from '@/api/user'
+import Comment from './components/comment'
 export default {
+  components: {
+    Comment
+  },
   data () {
     return {
       article: {} // 文章详情
@@ -42,6 +48,7 @@ export default {
     // 关注获取取消关注
     async follow () {
       try {
+        // 根据现在的状态 选择 取消关注还是关注
         if (this.article.is_followed) {
           await user.unfollowUser(this.article.aut_id)
         } else {
@@ -86,6 +93,7 @@ export default {
     position:sticky;
     background-color: #fff;
     top:46px;
+    z-index: 2;
     .text {
       flex: 1;
       padding-left: 10px;
