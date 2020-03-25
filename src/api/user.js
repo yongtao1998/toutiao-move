@@ -29,3 +29,12 @@ export function unfollowUser (autid) {
     method: 'delete'
   })
 }
+
+/****
+ * 获取个人信息
+ */
+export function getUserInfo () {
+  return $http({
+    url: '/user'
+  })
+}
