@@ -38,3 +38,37 @@ export function getUserInfo () {
     url: '/user'
   })
 }
+
+/***
+ * 获取用户的个人资料
+ */
+export function getUserProfile () {
+  return $http({
+    url: '/user/profile'
+  })
+}
+
+/****
+ * 上传头像
+ */
+export function updatePhoto (data) {
+  return $http({
+    url: '/user/photo',
+    method: 'patch',
+    data
+  })
+}
+
+/***
+ * 保存用户更改资料
+ */
+
+export function saveUserInfo (data) {
+  return $http({
+    url: '/user/profile',
+    method: 'patch',
+    data: {
+      ...data, photo: null
+    }
+  })
+}
