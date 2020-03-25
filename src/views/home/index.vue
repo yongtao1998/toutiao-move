@@ -68,6 +68,7 @@ export default {
         this.showMoreAction = false
         eventBus.$emit('blacklist', this.authodId)
       } catch (error) {
+        console.log('失败')
         this.$notify({ message: '失败' })
       }
     },

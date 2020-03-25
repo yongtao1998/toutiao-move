@@ -86,3 +86,16 @@ export function getComments (params) {
     params // type(是文章的的回复还是回复的回复)  source(来源id)  offset(偏移量 分页依据)
   })
 }
+
+/*****
+ * 评论与回复
+ *
+ */
+
+export function commentOrReply (data) {
+  return $http({
+    url: '/comments',
+    method: 'post',
+    data
+  })
+}

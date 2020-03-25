@@ -26,12 +26,12 @@
     <div class="reply-container van-hairline--top">
       <van-field v-model="value" placeholder="写评论...">
         <van-loading v-if="submiting" slot="button" type="spinner" size="16px"></van-loading>
-        <span class="submit" v-else slot="button">提交</span>
+        <span @click="submit()" class="submit" v-else slot="button">提交</span>
       </van-field>
     </div>
 
     <!-- 放置评论的评论 弹出面板 -->
-    <van-action-sheet v-model="showReply" :round="false" class="reply_dialog" title="回复评论">
+    <van-action-sheet @closed="reply.commentId=null" v-model="showReply" :round="false" class="reply_dialog" title="回复评论">
         <!-- 主动关闭上拉加载 :immediate-check="false"  -->
       <van-list v-model="reply.loading" :immediate-check="false" :finished="reply.finished" finished-text="没有更多了">
         <div class="item van-hairline--bottom van-hairline--top" v-for="item in reply.list " :key="item.aut_id.toString()">
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { getComments } from '@/api/articles'
+import { getComments, commentOrReply } from '@/api/articles'
 export default {
   data () {
     return {
@@ -79,6 +79,48 @@ export default {
     }
   },
   methods: {
+    // 提交评论
+    async submit () {
+      if (this.$store.state.user.token) {
+        if (!this.value) return false
+        this.submiting = true // 打开提交状态 提交完毕 关闭
+        await this.$sleep(800)
+        try {
+          const data = await commentOrReply({
+            target: this.reply.commentId ? this.reply.commentId : this.$route.query.artId,
+            content: this.value,
+            art_id: this.reply.commentId ? this.$route.query.artId : null
+            // 如果是对评论进行评论 需要传该评论属于哪个文章 如果是对文章进行评论 不要传这个参数
+          })
+          if (this.reply.commentId) {
+            // 如果此id存在 表示对 评论进行评论
+            this.reply.list.unshift(data.new_obj)
+            // 如果是对评论进行评论  需要找到 对应的评论id 将评论id的回复数+1
+            const comment = this.comments.find(item => item.com_id.toString() === this.reply.commentId)
+            comment && comment.reply_count++
+          } else {
+            // 对文章评论
+            this.comments.unshift(data.new_obj)
+          }
+          this.value = ''
+        } catch (error) {
+          this.$notify({ message: '评论失败' })
+        }
+        this.submiting = false
+      } else {
+        try {
+          await this.$dialog.confirm({ message: '请您先去登录' })
+          this.$router.push({
+            path: '/login',
+            query: {
+              redirectUrl: this.$route.fullPath
+            }
+          })
+        } catch (error) {
+          console.log('取消登录')
+        }
+      }
+    },
     //   加载 评论
     async onLoad () {
       const { artId } = this.$route.query
