@@ -19,7 +19,7 @@ export default new Vuex.Store({
       auth.setUser(payload.user)
     },
     // 删除token
-    deltoken (state) {
+    delUser (state) {
       // 清除 state中的token
       state.user = {}
       // 清除本地的token

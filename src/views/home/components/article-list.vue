@@ -75,18 +75,22 @@ export default {
     // 获取上滑加载数据 并更新
     async onLoad () {
       await this.$sleep()
-      const result = await getArticles({ channel_id: this.channel_id, timestamp: this.timestamp || Date.now() })
-      // 把获取到的文章 添加到 文章列表后面
-      this.articles.push(...result.results)
-      // 关闭 上拉刷新
-      this.loading = false
-      // 把时间戳赋值给 timestamp 但是需要根据时间戳来 判断 是否还有没有数据
-      // pre_timestamp 为 0的时候 表示已经没有数据了
-      if (result.pre_timestamp) {
-        this.timestamp = result.pre_timestamp
-      } else {
+      try {
+        const result = await getArticles({ channel_id: this.channel_id, timestamp: this.timestamp || Date.now() })
+        // 把获取到的文章 添加到 文章列表后面
+        this.articles.push(...result.results)
+        // 关闭 上拉刷新
+        this.loading = false
+        // 把时间戳赋值给 timestamp 但是需要根据时间戳来 判断 是否还有没有数据
+        // pre_timestamp 为 0的时候 表示已经没有数据了
+        if (result.pre_timestamp) {
+          this.timestamp = result.pre_timestamp
+        } else {
         // 表示没有数据了
-        this.finished = true
+          this.finished = true
+        }
+      } catch (error) {
+        console.log(' ')
       }
     },
     // 下拉获取最近数据

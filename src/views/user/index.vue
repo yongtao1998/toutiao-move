@@ -55,7 +55,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['deltoken']),
+    ...mapMutations(['delUser']),
     // 获取用户信息
     async getUserInfo () {
       this.userInfo = await getUserInfo()
@@ -66,7 +66,7 @@ export default {
         await this.$dialog.confirm({
           message: '确定要退出吗'
         })
-        this.deltoken()
+        this.delUser()
         this.$router.push('/login')
       } catch (error) {
         console.log('取消了退出')

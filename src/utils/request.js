@@ -93,8 +93,10 @@ instance.interceptors.response.use(function (response) {
         // result 返回的 新token数据
         // 成功了 需要提交到 mutations更新 新的token
         store.commit('updateUser', {
-          user: result.data.data.token, // 更新 最新的token数据
-          refresh_token: store.state.user.refresh_token // refresh_token 返回给原来的 state
+          user: {
+            user: result.data.data.token, // 更新 最新的token数据
+            refresh_token: store.state.user.refresh_token // refresh_token 返回给原来的 state
+          }
         })
 
         // 相当于 执行之前出现401错误的请求
