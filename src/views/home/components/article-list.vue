@@ -69,7 +69,7 @@ export default {
       finished: false, // 是否完成所有数据的加载
       articles: [], // 文章列表
       timestamp: null, // 时间戳
-      scrollTop: 0
+      scrollTop: 0 // 记录滚动的位置
     }
   },
   methods: {
@@ -154,9 +154,23 @@ export default {
         this.onLoad()
       }
     })
+    // 监听当前tab切换的事件
+    eventBus.$on('changeTab', id => {
+      // 判断传入的的频道是否等于当前频道
+      if (id === this.channel_id) {
+      //  this.$nextTick  会在数据响应之后 页面渲染完毕之后执行
+      // this.$nextTick 会保证在changeTab动作切换完成 并且 完成界面渲染之后执行
+        this.$nextTick(() => {
+          if (this.scrollTop && this.$refs.myScroll) {
+            this.$refs.myScroll.scrollTop = this.scrollTop
+          }
+        })
+      }
+    })
   },
-  // 阅读记忆
+  // 阅读记忆 唤醒keeep-alive
   activated () {
+    // 当滚动距离 不为0 且dom元素存在的情况下 才去做滚动
     if (this.$refs.myScroll && this.scrollTop) {
       this.$refs.myScroll.scrollTop = this.scrollTop
     }

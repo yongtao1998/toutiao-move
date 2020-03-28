@@ -50,8 +50,10 @@ export default {
         msg: this.value,
         timestamp: Date.now()
       }
-      this.socket.emit('message', obj) // 发送消息 message固定写法
+      // 发送消息 message固定写法
+      this.socket.emit('message', obj)
       this.list.push(obj)
+      // 滚动条 自动拉到底部
       this.scrollBottom()
       this.value = ''
       this.loading = false

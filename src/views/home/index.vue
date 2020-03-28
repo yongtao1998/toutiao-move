@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 放置 tabs组件 -->
-    <van-tabs v-model="activeIndex">
+    <van-tabs v-model="activeIndex" @change="changeTabs">
       <!-- title值为当前显示的标签页 -->
       <van-tab :title="item.name" v-for="item in channels" :key="item.id">
         <!-- 文章列表  -->
@@ -55,6 +55,14 @@ export default {
     }
   },
   methods: {
+    // 切换 tab页时会触发
+    changeTabs () {
+      // 通知所有的article-list实例 告诉他们 我切换页签了,把切换的页签传过去
+      // article-list组件需要 拿到传过去的的页签 看看是否是自己所在的页签
+      // 如果是自己所在的页签 就需要 判断一下 自己的组件是否有滚动 如果有滚动数据 就滚动对应的位置
+      //  触发一个公共事件 事件名叫 切换页签 携带参数
+      eventBus.$emit('changeTab', this.channels[this.activeIndex].id)
+    },
     // 拉黑作者 沙比东西 一直存脏数据
     async blacklist () {
       try {
