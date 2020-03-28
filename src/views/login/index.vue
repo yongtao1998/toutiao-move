@@ -6,7 +6,7 @@
       <!-- 登陆布局 -->
      <div class="head">
        <div class="left" >
-         <img src="../../assets/img/logo.jpg" alt="">
+         <img src="../../assets/img/YQ.jpg" alt="">
        </div>
        <div class="right">
          账号登录

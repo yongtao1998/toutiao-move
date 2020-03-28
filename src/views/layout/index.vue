@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- vant导航组件 -->
-    <van-nav-bar v-if="showNavBar" fixed title="今日头条"
+    <van-nav-bar v-if="showNavBar" fixed title="猿趣新闻"
     right-text="搜索" @click-right="$router.push('/search')"></van-nav-bar>
     <!-- 二级路由容器 -->
   <div class="my-wrapper"  :class="{ noTop: !showNavBar }">
