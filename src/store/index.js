@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     // token 信息的对象
-    user: auth.getUser()
+    user: auth.getUser(),
+    photo: null
   },
   // 修改token
   mutations: {
@@ -24,6 +25,10 @@ export default new Vuex.Store({
       state.user = {}
       // 清除本地的token
       auth.delUser()
+    },
+    // 更新photo
+    updatePhoto (state, payload) {
+      state.photo = payload.photo
     }
 
   },

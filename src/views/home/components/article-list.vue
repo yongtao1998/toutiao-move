@@ -2,7 +2,7 @@
   <!-- 文章列表组件 放置列表 -->
   <!-- van-list 可以帮助我们实现上拉加载 -->
   <!-- 预留 阅读记忆 -->
-  <div class="scroll-wrapper">
+  <div class="scroll-wrapper" @scroll="remember" ref="myScroll">
     <!-- 下拉加载 -->
     <van-pull-refresh v-model="downLoading" @refresh="onRefresh" :success-text="successText">
 
@@ -68,10 +68,18 @@ export default {
       loading: false, // 是否开启上拉加载
       finished: false, // 是否完成所有数据的加载
       articles: [], // 文章列表
-      timestamp: null // 时间戳
+      timestamp: null, // 时间戳
+      scrollTop: 0
     }
   },
   methods: {
+    // 滚动事件
+    remember (event) {
+      clearTimeout(this.time)
+      this.time = setTimeout(() => {
+        this.scrollTop = event.target.scrollTop
+      }, 500)
+    },
     // 获取上滑加载数据 并更新
     async onLoad () {
       await this.$sleep()
@@ -136,6 +144,7 @@ export default {
         }
       }
     })
+    // 监听 拉黑作者
     eventBus.$on('blacklist', (autId) => {
       const i = this.articles.findIndex(item => item.aut_id.toString() === autId)
       if (i > -1) {
@@ -145,6 +154,12 @@ export default {
         this.onLoad()
       }
     })
+  },
+  // 阅读记忆
+  activated () {
+    if (this.$refs.myScroll && this.scrollTop) {
+      this.$refs.myScroll.scrollTop = this.scrollTop
+    }
   }
 }
 </script>

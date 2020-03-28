@@ -52,6 +52,7 @@
 <script>
 import dayjs from 'dayjs'
 import { getUserProfile, updatePhoto, saveUserInfo } from '@/api/user'
+import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -73,6 +74,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['updatePhoto']),
     // 昵称验证
     btnName () {
       if (this.user.name.length < 1 || this.user.name.length > 7) {
@@ -113,15 +115,22 @@ export default {
       data.append('photo', this.$refs.myfile.files[0])
       const result = await updatePhoto(data)
       this.user.photo = result.photo
+      // 将修改成功的头像 设置给当前的vuex
+      this.updatePhoto({ photo: result.photo })
       this.showPhoto = false
     },
     // 保存用户信息
     async saveUserInfo () {
       try {
+        // debugger
         await saveUserInfo(this.user)
+
         this.$notify({ type: 'success', message: '保存成功' })
       } catch (error) {
-        this.$notify({ message: '保存失败' })
+        // console.dir(error)
+        if (error.response.status === 400) {
+          this.$notify({ message: '保存失败,请检查账号格式是否正确' })
+        }
       }
     }
 
