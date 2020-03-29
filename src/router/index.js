@@ -10,7 +10,13 @@ const routes = [
       {
         // 默认为二级路由的默认组件
         path: '',
-        component: () => import('@/views/home')
+        component: () => import('@/views/home'),
+        // 如果一级路由存在默认的二级路由 那么meta属性应该写在二级路由的对象上
+        // meta 中可以放置当前路由的信息
+        // meta是固定写法
+        meta: {
+          isAlive: true // 是否缓存组件实例 路由元信息
+        }
       },
       {
         path: '/question',

@@ -94,7 +94,7 @@ instance.interceptors.response.use(function (response) {
         // 成功了 需要提交到 mutations更新 新的token
         store.commit('updateUser', {
           user: {
-            user: result.data.data.token, // 更新 最新的token数据
+            token: result.data.data.token, // 更新 最新的token数据
             refresh_token: store.state.user.refresh_token // refresh_token 返回给原来的 state
           }
         })
