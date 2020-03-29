@@ -38,7 +38,7 @@
 
     <van-cell-group class="user-group">
       <van-cell icon="edit" title="编辑资料" to="/user/profile" is-link />
-      <van-cell icon="chat-o" title="小智同学" to="/user/chat" is-link />
+      <van-cell icon="chat-o" title="YQ精灵" to="/user/chat" is-link />
       <van-cell icon="setting-o" title="系统设置" is-link />
       <van-cell @click="lgout" icon="warning-o" title="退出登录" is-link />
     </van-cell-group>
